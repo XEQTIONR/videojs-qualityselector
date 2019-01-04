@@ -23,19 +23,35 @@ class QualitySelector {
       let source = this.sources.find(ss => ss.format === quality.code);
 
       if (source) {
-        this.player.src({ src: source.src, type: source.type });
+          this.player.src({ src: source.src, type: source.type });
+          var whereYouAt = this.player.currentTime(); // <~~ Added this to get the current video position
+          console.log({whereYouAt}); // <~~ logging position to console
 
-        this.player.on('loadedmetadata', () => {
-          this.player.play();
+          this.player.on('loadedmetadata', function () {
+              _this.player.currentTime(whereYouAt); // <~~ Set the player back to the current position
+              _this.player.play();
 
-          Array.from(this.containerDropdownElement.firstChild.childNodes).forEach(ele => {
-            if (ele.dataset.code === quality.code) {
-              ele.setAttribute('class', 'current');
-            } else {
-              ele.removeAttribute('class');
-            }
+              Array.from(_this.containerDropdownElement.firstChild.childNodes).forEach(function (ele) {
+                  if (ele.dataset.code === quality.code) {
+                      ele.setAttribute('class', 'current');
+                  } else {
+                      ele.removeAttribute('class');
+                  }
+              });
           });
-        });
+        // this.player.src({ src: source.src, type: source.type });
+        //
+        // this.player.on('loadedmetadata', () => {
+        //   this.player.play();
+        //
+        //   Array.from(this.containerDropdownElement.firstChild.childNodes).forEach(ele => {
+        //     if (ele.dataset.code === quality.code) {
+        //       ele.setAttribute('class', 'current');
+        //     } else {
+        //       ele.removeAttribute('class');
+        //     }
+        //   });
+        // });
       }
 
       const player = document.getElementById(this.player.id_);
